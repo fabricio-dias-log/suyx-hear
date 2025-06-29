@@ -47,6 +47,10 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
+    // ViewModel para partilhar dados entre Fragments
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+
     // Biblioteca de Gráficos (MPAndroidChart)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
