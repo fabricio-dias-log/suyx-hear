@@ -53,6 +53,7 @@ dependencies {
 
     // Biblioteca de Gráficos (MPAndroidChart)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.androidx.navigation.fragment.ktx)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
