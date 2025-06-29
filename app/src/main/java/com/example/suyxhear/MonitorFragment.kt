@@ -42,8 +42,7 @@ class MonitorFragment : Fragment() {
         }
 
     private val requestNotificationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            // A monitorização começa independentemente da permissão de notificação
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { _ ->
             startMonitoring()
         }
 
@@ -58,22 +57,33 @@ class MonitorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         loadUserName()
-
         sharedViewModel.dbLimit.observe(viewLifecycleOwner) { limit ->
             dbLimit = limit
-            if(isMonitoring) updateGauge(binding.textDecibels.text.toString().removeSuffix(" dB").toInt())
+            if(isMonitoring) {
+                val currentDb = binding.textDecibels.text.toString().removeSuffix(" dB").toIntOrNull() ?: 0
+                updateGauge(currentDb)
+            }
         }
+    }
 
-        binding.buttonToggleMonitoring.setOnClickListener {
-            if (isMonitoring) stopMonitoring() else checkAudioPermission()
+    override fun onResume() {
+        super.onResume()
+        if (!isMonitoring) {
+            checkAudioPermission()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (isMonitoring) {
+            stopMonitoring()
         }
     }
 
     private fun loadUserName() {
         val sharedPref = activity?.getSharedPreferences("SuyxHearPrefs", Context.MODE_PRIVATE) ?: return
-        val name = sharedPref.getString("USER_NAME", "Usuário")
+        val name = sharedPref.getString("USER_NAME", "Usuário")?.split(" ")?.firstOrNull()
         binding.textGreeting.text = "Olá, $name!"
     }
 
@@ -112,7 +122,7 @@ class MonitorFragment : Fragment() {
                 prepare()
                 start()
                 isMonitoring = true
-                binding.buttonToggleMonitoring.text = "Parar Monitoramento"
+                binding.textMonitoringStatus.visibility = View.VISIBLE
                 handler.post(updateDecibels)
             } catch (e: IOException) {
                 Log.e("MediaRecorder", "prepare() failed", e)
@@ -123,7 +133,6 @@ class MonitorFragment : Fragment() {
     private val updateDecibels = object : Runnable {
         override fun run() {
             if (isMonitoring) {
-                // ... (cálculo de decibéis permanece o mesmo) ...
                 val amplitude = mediaRecorder?.maxAmplitude ?: 0
                 val db = if (amplitude > 0) (20 * log10(amplitude.toDouble()) + 20).coerceIn(20.0, 120.0) else 0.0
                 val roundedDb = db.toInt()
@@ -132,10 +141,8 @@ class MonitorFragment : Fragment() {
                 updateGauge(roundedDb)
                 sharedViewModel.addNoiseRecord(NoiseRecord(System.currentTimeMillis(), roundedDb))
 
-                // Lógica de notificação
                 if (roundedDb > dbLimit) {
                     val currentTime = System.currentTimeMillis()
-                    // Envia notificação a cada 30 segundos no máximo
                     if (currentTime - lastNotificationTime > 30000) {
                         notificationHelper.sendNotification(roundedDb, dbLimit)
                         lastNotificationTime = currentTime
@@ -163,12 +170,7 @@ class MonitorFragment : Fragment() {
         mediaRecorder?.release()
         mediaRecorder = null
         isMonitoring = false
-        binding.buttonToggleMonitoring.text = "Iniciar Monitoramento"
-    }
-
-    override fun onStop() {
-        super.onStop()
-        stopMonitoring()
+        binding.textMonitoringStatus.visibility = View.INVISIBLE
     }
 
     override fun onDestroyView() {

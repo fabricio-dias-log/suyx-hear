@@ -16,11 +16,11 @@
             android:id="@+id/text_greeting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Olá, Usuário!"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Olá, Usuário!" />
 
         <TextView
             android:id="@+id/text_welcome"
@@ -34,12 +34,12 @@
             android:id="@+id/circle_container"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_marginTop="32dp"
             android:background="@drawable/circle_background"
-            app:layout_constraintBottom_toTopOf="@+id/button_toggle_monitoring"
+            app:layout_constraintBottom_toTopOf="@+id/progress_gauge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_welcome"
+            app:layout_constraintVertical_bias="0.35"
             app:layout_constraintVertical_chainStyle="packed">
 
             <TextView
@@ -47,10 +47,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="0 dB"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="60sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="42 dB" />
 
         </FrameLayout>
 
@@ -62,25 +62,22 @@
             android:layout_marginTop="24dp"
             android:progress="0"
             app:indicatorColor="@color/green"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/circle_container"
             app:layout_constraintStart_toStartOf="@id/circle_container"
             app:layout_constraintTop_toBottomOf="@id/circle_container" />
 
-        <Button
-            android:id="@+id/button_toggle_monitoring"
+        <TextView
+            android:id="@+id/text_monitoring_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:paddingLeft="32dp"
-            android:paddingTop="12dp"
-            android:paddingRight="32dp"
-            android:paddingBottom="12dp"
-            android:text="Iniciar Monitoramento"
-            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:text="Monitoramento ativo..."
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progress_gauge" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
