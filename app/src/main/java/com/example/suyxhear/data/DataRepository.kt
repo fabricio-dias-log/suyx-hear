@@ -15,6 +15,7 @@ class DataRepository(context: Context) {
         const val KEY_NIGHT_MODE = "NIGHT_MODE"
         const val KEY_DB_LIMIT = "DB_LIMIT"
         const val KEY_NOISE_HISTORY = "NOISE_HISTORY"
+        const val KEY_IS_LOGGED_IN = "IS_LOGGED_IN"
     }
 
     // --- User Settings ---

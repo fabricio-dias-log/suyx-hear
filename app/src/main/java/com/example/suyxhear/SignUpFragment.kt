@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.suyxhear.data.DataRepository
 import com.example.suyxhear.databinding.FragmentSignUpBinding
 import com.example.suyxhear.viewmodel.SharedViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -34,7 +35,11 @@ class SignUpFragment : Fragment() {
             val password = binding.editTextPassword.text.toString()
 
             if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
-                sharedViewModel.setUserName(name) // Salva o nome através do ViewModel
+                sharedViewModel.setUserName(name)
+
+                val repository = DataRepository(requireContext())
+                repository.saveBoolean(DataRepository.KEY_IS_LOGGED_IN, true)
+
                 Snackbar.make(view, "Registro realizado com sucesso!", Snackbar.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_signUpFragment_to_monitorFragment)
             } else {

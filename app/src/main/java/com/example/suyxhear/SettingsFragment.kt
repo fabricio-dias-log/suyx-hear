@@ -18,12 +18,14 @@ class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var repository: DataRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        repository = DataRepository(requireContext())
         return binding.root
     }
 
@@ -33,6 +35,7 @@ class SettingsFragment : Fragment() {
         loadSettings()
 
         binding.buttonLogout.setOnClickListener {
+            repository.saveBoolean(DataRepository.KEY_IS_LOGGED_IN, false)
             findNavController().navigate(R.id.action_settingsFragment_to_loginFragment)
         }
 
@@ -52,18 +55,12 @@ class SettingsFragment : Fragment() {
     }
 
     private fun saveAllSettings() {
-        // Salva através do ViewModel, que por sua vez chama o Repository
         sharedViewModel.setUserName(binding.editTextName.text.toString())
         sharedViewModel.setDbLimit(binding.sliderDbLimit.value.toInt())
-
-        // Salva o tema diretamente, pois afeta a UI de imediato
-        val repository = DataRepository(requireContext())
         repository.saveBoolean(DataRepository.KEY_NIGHT_MODE, binding.switchTheme.isChecked)
     }
 
     private fun loadSettings() {
-        val repository = DataRepository(requireContext())
-
         sharedViewModel.userName.observe(viewLifecycleOwner) { name ->
             binding.editTextName.setText(name)
         }
