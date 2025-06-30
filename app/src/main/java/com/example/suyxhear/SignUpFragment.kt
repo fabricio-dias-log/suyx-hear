@@ -1,19 +1,21 @@
 package com.example.suyxhear
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.suyxhear.databinding.FragmentSignUpBinding
+import com.example.suyxhear.viewmodel.SharedViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,20 +34,12 @@ class SignUpFragment : Fragment() {
             val password = binding.editTextPassword.text.toString()
 
             if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
-                saveUserName(name)
+                sharedViewModel.setUserName(name) // Salva o nome através do ViewModel
                 Snackbar.make(view, "Registro realizado com sucesso!", Snackbar.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_signUpFragment_to_monitorFragment)
             } else {
                 Snackbar.make(view, "Por favor, preencha todos os campos.", Snackbar.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    private fun saveUserName(name: String) {
-        val sharedPref = activity?.getSharedPreferences("SuyxHearPrefs", Context.MODE_PRIVATE) ?: return
-        with(sharedPref.edit()) {
-            putString("USER_NAME", name)
-            apply()
         }
     }
 

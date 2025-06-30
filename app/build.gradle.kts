@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.suyxhear"
-        minSdk = 24 // Android 7.0 (Nougat)
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -42,18 +42,14 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-
-    // Componentes de Navegação
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
-
-    // ViewModel para partilhar dados entre Fragments
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
-
-    // Biblioteca de Gráficos (MPAndroidChart)
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    implementation(libs.androidx.navigation.fragment.ktx)
+
+    // Biblioteca para serialização JSON (salvar lista de histórico)
+    implementation("com.google.code.gson:gson:2.10.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

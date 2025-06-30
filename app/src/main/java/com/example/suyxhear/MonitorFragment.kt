@@ -1,7 +1,6 @@
 package com.example.suyxhear
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Build
@@ -57,7 +56,11 @@ class MonitorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadUserName()
+
+        sharedViewModel.userName.observe(viewLifecycleOwner) { name ->
+            binding.textGreeting.text = "Olá, ${name.split(" ").firstOrNull() ?: "Usuário"}!"
+        }
+
         sharedViewModel.dbLimit.observe(viewLifecycleOwner) { limit ->
             dbLimit = limit
             if(isMonitoring) {
@@ -79,12 +82,6 @@ class MonitorFragment : Fragment() {
         if (isMonitoring) {
             stopMonitoring()
         }
-    }
-
-    private fun loadUserName() {
-        val sharedPref = activity?.getSharedPreferences("SuyxHearPrefs", Context.MODE_PRIVATE) ?: return
-        val name = sharedPref.getString("USER_NAME", "Usuário")?.split(" ")?.firstOrNull()
-        binding.textGreeting.text = "Olá, $name!"
     }
 
     private fun checkAudioPermission() {
